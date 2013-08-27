@@ -174,7 +174,7 @@ sub _constructor_maker_for {
         accessor_generator => $class->_accessor_maker_for($target),
         $non_moo ? (
           construction_builder => sub {
-            '$class->'.$target.'::SUPER::new('
+            '$class->next::method('
               .($target->can('FOREIGNBUILDARGS') ?
                 '$class->FOREIGNBUILDARGS(@_)' : '@_')
               .')'
@@ -185,7 +185,7 @@ sub _constructor_maker_for {
         subconstructor_handler => (
           '      if ($Moo::MAKERS{$class}) {'."\n"
           .'        if ($Moo::MAKERS{$class}{constructor}) {'."\n"
-          .'          return $class->'.$target.'::SUPER::new(@_);'."\n"
+          .'          return $class->next::method(@_);'."\n"
           .'        }'."\n"
           .'        '.$class.'->_constructor_maker_for($class);'."\n"
           .'        return $class->new(@_)'.";\n"
