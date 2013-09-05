@@ -103,7 +103,7 @@ sub _set_superclasses {
     Moo->_constructor_maker_for($target)
        ->register_attribute_specs(%{$old->all_attribute_specs});
   }
-  elsif (!$target->isa('Moo::Object')) {
+  elsif (!$target->isa('Moo::Object')&&!$target->isa('Moose::Object')) {
     Moo->_constructor_maker_for($target);
   }
   no warnings 'once'; # piss off. -- mst
@@ -168,10 +168,16 @@ sub _constructor_maker_for {
       grep !$MAKERS{$_},
       @parents;
 
+    my $no_build = (
+      $target->isa('Moose::Object')
+      or $target->isa('Mouse::Object')
+    );
+
     ($con ? ref($con) : 'Method::Generate::Constructor')
       ->new(
         package => $target,
         accessor_generator => $class->_accessor_maker_for($target),
+        no_build => $no_build,
         $non_moo ? (
           construction_builder => sub {
             '$class->next::method('

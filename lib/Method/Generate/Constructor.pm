@@ -94,7 +94,7 @@ sub generate_method {
   $body .= $self->_check_required($spec);
   $body .= '    my $new = '.$self->construction_string.";\n";
   $body .= $self->_assign_new($spec);
-  if ($into->can('BUILD')) {
+  if (!$self->{no_build} && $into->can('BUILD')) {
     $body .= $self->buildall_generator->buildall_body_for(
       $into, '$new', '$args'
     );
@@ -204,6 +204,7 @@ Moo->_constructor_maker_for(__PACKAGE__)->register_attribute_specs(
   construction_builder => { is => 'bare' },
   subconstructor_handler => { is => 'ro' },
   package => { is => 'bare' },
+  no_build => { is => 'ro' },
 );
 
 1;
