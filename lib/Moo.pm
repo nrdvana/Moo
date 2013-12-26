@@ -172,6 +172,13 @@ sub _constructor_maker_for {
       $target->isa('Moose::Object')
       or $target->isa('Mouse::Object')
     );
+    if (!$target->isa('Moo::Object')&&!$target->isa('Moose::Object')) {
+      no strict 'refs';
+      no warnings 'redefine';
+      *{"${target}::BUILDARGS"} = \&Moo::Object::BUILDARGS;
+      *{"${target}::BUILDALL"} = \&Moo::Object::BUILDALL;
+      *{"${target}::DEMOLISHALL"} = \&Moo::Object::DEMOLISHALL;
+    }
 
     ($con ? ref($con) : 'Method::Generate::Constructor')
       ->new(

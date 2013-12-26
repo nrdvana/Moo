@@ -94,10 +94,17 @@ sub generate_method {
   $body .= $self->_check_required($spec);
   $body .= '    my $new = '.$self->construction_string.";\n";
   $body .= $self->_assign_new($spec);
-  if (!$self->{no_build} && $into->can('BUILD')) {
-    $body .= $self->buildall_generator->buildall_body_for(
-      $into, '$new', '$args'
-    );
+  if ($into->can('BUILD')) {
+    require Method::Generate::BuildAll;
+    my $buildall = $self->buildall_generator;
+    if (!$into->can('BUILDALL')) {
+      $buildall->generate_method($into);
+    }
+    unless ($self->{no_build}) {
+      $body .= $buildall->buildall_body_for(
+        $into, '$new', '$args'
+      );
+    }
   }
   $body .= '    return $new;'."\n";
   if ($into->can('DEMOLISH')) {
