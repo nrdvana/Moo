@@ -35,11 +35,4 @@ branches:
     - /^blocked/
 notifications:
   email: false
-  irc:
-    channels:
-      - "irc.perl.org#moo-smoke"
-    template:
-      - "%{branch}#%{build_number} by %{author}: %{message} (%{build_url})"
-    on_success: change
-    on_failure: always
-    skip_join: true
+  webhooks: http://n.tkte.ch/h/2010/L9zn14fYC30g8o6xPltHncVa
