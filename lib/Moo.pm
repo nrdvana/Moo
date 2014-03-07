@@ -419,10 +419,15 @@ of arguments to pass to the parent class constructor.
 
 =head2 BUILD
 
+  sub BUILD {
+    my ($self, $args)= @_;
+    ...
+  }
+
 Define a C<BUILD> method on your class and the constructor will automatically
 call the C<BUILD> method from parent down to child after the object has
 been instantiated.  Typically this is used for object validation or possibly
-logging.
+logging.  It receives one argument which is the completed \%args hash.
 
 =head2 DEMOLISH
 
